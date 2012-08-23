@@ -1,14 +1,14 @@
 package de.hochtaunusschule.ep.orm.dto;
 
 //muss angepasst werden!
-public class PersonImplementierung implements IPerson 
+public class Person implements IPerson 
 {
 	private int personID;
 	private int telefonNr;
 	private int handyNr;
 	private IOrt wohnort;
 	
-	public PersonImplementierung(IOrt wohnort)
+	public Person(IOrt wohnort)
 	{
 		this.wohnort = wohnort;
 	}

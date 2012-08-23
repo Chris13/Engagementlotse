@@ -1,12 +1,12 @@
 package de.hochtaunusschule.ep.orm.dto;
 
 //muss angepasst werden!
-public class FaehigkeitImplementierung implements IFaehigkeit 
+public class Faehigkeit implements IFaehigkeit 
 {
 	private String bezeichnung;
 	private String kommentar;
 	
-	public FaehigkeitImplementierung(String bezeichnung, String kommentar)
+	public Faehigkeit(String bezeichnung, String kommentar)
 	{
 		this.bezeichnung = bezeichnung;
 		this.setKommentar(kommentar);

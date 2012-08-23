@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 //muss angepasst werden!
-public class LotseImplementierung extends NatuerlichePersonImplementierung
+public class Lotse extends NatuerlichePerson
 		implements ILotse {
 
-	public LotseImplementierung(IOrt wohnort, String vorname, String nachname,
+	public Lotse(IOrt wohnort, String vorname, String nachname,
 			boolean geschlecht, Date geburtsDatum) {
 		super(wohnort, vorname, nachname, geschlecht, geburtsDatum);
 		// TODO Auto-generated constructor stub

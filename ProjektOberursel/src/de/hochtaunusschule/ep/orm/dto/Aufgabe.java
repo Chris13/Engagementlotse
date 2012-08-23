@@ -1,19 +1,19 @@
 package de.hochtaunusschule.ep.orm.dto;
 
 //muss angepasst werden!
-public class AufgabeImplementierung implements IAufgabe {
+public class Aufgabe implements IAufgabe {
 
 	private String name;
 	private String beschreibung;
 	private ITraeger traeger;
 	
-	public AufgabeImplementierung(String name, ITraeger traeger)
+	public Aufgabe(String name, ITraeger traeger)
 	{
 		this.name = name;
 		this.traeger = traeger;
 	}
 	
-	public AufgabeImplementierung(String name, ITraeger traeger, String beschreibung)
+	public Aufgabe(String name, ITraeger traeger, String beschreibung)
 	{
 		this.name = name;
 		this.traeger = traeger;

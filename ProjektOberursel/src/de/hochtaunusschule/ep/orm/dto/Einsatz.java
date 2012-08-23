@@ -3,7 +3,7 @@ package de.hochtaunusschule.ep.orm.dto;
 import java.util.Date;
 
 //muss angepasst werden!
-public class EinsatzImplementierung implements IEinsatz 
+public class Einsatz implements IEinsatz 
 {
 	private IHelfer helfer;
 	private ILotse lotse;
@@ -11,14 +11,14 @@ public class EinsatzImplementierung implements IEinsatz
 	private Date beginnDatum;
 	private Date endDatum;
 	
-	public EinsatzImplementierung(IHelfer helfer, ILotse lotse, IAufgabe aufgabe)
+	public Einsatz(IHelfer helfer, ILotse lotse, IAufgabe aufgabe)
 	{
 		this.helfer = helfer;
 		this.aufgabe = aufgabe;
 		this.lotse = lotse;
 	}
 	
-	public EinsatzImplementierung(IHelfer helfer, ILotse lotse, IAufgabe aufgabe, Date beginnDatum, Date endDatum)
+	public Einsatz(IHelfer helfer, ILotse lotse, IAufgabe aufgabe, Date beginnDatum, Date endDatum)
 	{
 		this.helfer = helfer;
 		this.lotse = lotse;

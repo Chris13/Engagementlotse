@@ -3,14 +3,14 @@ package de.hochtaunusschule.ep.orm.dto;
 import java.util.Date;
 
 //muss angepasst werden!
-public class NatuerlichePersonImplementierung extends PersonImplementierung implements INatuerlichePerson 
+public class NatuerlichePerson extends Person implements INatuerlichePerson 
 {
 	private String vorname;
 	private String nachname;
 	private Date geburtsDatum;
 	private boolean geschlecht;
 	
-	public NatuerlichePersonImplementierung(IOrt wohnort, String vorname, String nachname, boolean geschlecht, Date geburtsDatum) 
+	public NatuerlichePerson(IOrt wohnort, String vorname, String nachname, boolean geschlecht, Date geburtsDatum) 
 	{
 		super(wohnort);
 		this.vorname = vorname;

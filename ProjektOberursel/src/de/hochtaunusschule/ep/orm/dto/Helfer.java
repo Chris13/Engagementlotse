@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 //muss angepasst werden!
-public class HelferImplementierung extends NatuerlichePersonImplementierung implements IHelfer 
+public class Helfer extends NatuerlichePerson implements IHelfer 
 {
 	private Date eintrittsDatum;
 	
-	public HelferImplementierung(IOrt wohnort, Date heutigerTag, String vorname, String nachname, boolean geschlecht) 
+	public Helfer(IOrt wohnort, Date heutigerTag, String vorname, String nachname, boolean geschlecht) 
 	{
 		super(wohnort, nachname, nachname, geschlecht, heutigerTag);
 		this.eintrittsDatum = heutigerTag;
