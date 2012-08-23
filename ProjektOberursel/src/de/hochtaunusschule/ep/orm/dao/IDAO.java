@@ -22,8 +22,4 @@ public interface IDAO<T>
 	//Delete
 	void datensatzLoeschen(T datensatz) throws SQLException;
 	
-
-
-	
-	
 }
