@@ -2,32 +2,21 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.BoxLayout;
 import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import net.miginfocom.swing.MigLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import java.awt.GridBagLayout;
-import javax.swing.SpringLayout;
-
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 
 public class P_Startseite extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	JPanel startseite;
 	/**
 	 * Create the panel.

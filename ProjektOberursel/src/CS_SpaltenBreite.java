@@ -6,9 +6,7 @@ import java.awt.FontMetrics;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JViewport;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -19,20 +17,25 @@ import javax.swing.text.JTextComponent;
 public class CS_SpaltenBreite {
 		 
 	    private static final int DEFAULT_COLUMN_PADDING = 5;
+	    private static boolean changerowheight = false;
 	    
 	    public static int autoResizeTable(JTable aTable, boolean includeColumnHeaderWidth) {
-	        return (autoResizeTable(aTable, includeColumnHeaderWidth, DEFAULT_COLUMN_PADDING));
+	        return (autoResizeTable(aTable, includeColumnHeaderWidth, DEFAULT_COLUMN_PADDING, changerowheight));
 	    }
 	 
-	    public static int autoResizeTable(JTable aTable, boolean includeColumnHeaderWidth, int columnPadding) {
-	        return (autoResizeTable(aTable, includeColumnHeaderWidth, columnPadding, false));
+	    public static int autoResizeTable(JTable aTable, boolean includeColumnHeaderWidth, int columnPadding, boolean rowheight) {
+	        return (autoResizeTable(aTable, includeColumnHeaderWidth, columnPadding, false , false));
 	    }
 
-	    private static int autoResizeTable(JTable aTable, boolean includeColumnHeaderWidth, int columnPadding, boolean fit) {
+	    static int autoResizeTable(JTable aTable, boolean includeColumnHeaderWidth, int columnPadding, boolean fit, boolean rowheight) {
+	    	changerowheight = rowheight;
 	        int columnCount = aTable.getColumnCount();
 	        int currentTableWidth = aTable.getWidth();
 	        int tableWidth = 0;
-	        aTable.setRowHeight(30);
+	        if(rowheight)
+	        	aTable.setRowHeight(20);
+	        else
+	        	aTable.setRowHeight(30);
 	        Dimension cellSpacing = aTable.getIntercellSpacing();
 	        if (columnCount > 0) // must have columns !
 	        {
@@ -45,10 +48,13 @@ public class CS_SpaltenBreite {
 	            // account for cell spacing too
 	            tableWidth += ((columnCount - 1) * cellSpacing.width);
 	            JTableHeader tableHeader = aTable.getTableHeader();
-	            tableHeader.setFont(new Font("Tahoma", Font.PLAIN, 16));
+	            if(rowheight)
+	            	tableHeader.setFont(new Font("Tahoma", Font.PLAIN,12));
+	            else
+	            	tableHeader.setFont(new Font("Tahoma", Font.PLAIN, 16));
 	            Dimension headerDim = tableHeader.getPreferredSize();
 	            headerDim.width = tableWidth;
-	            Dimension interCellSpacing = aTable.getIntercellSpacing();
+	            aTable.getIntercellSpacing();
 	            Dimension dim = new Dimension();
 	            dim.width = tableWidth;
 	            int viewWidth = currentTableWidth;         
@@ -120,9 +126,10 @@ public class CS_SpaltenBreite {
 	                try {
 	                    String headerText = (String) column.getHeaderValue();
 	                    JLabel defaultLabel = new JLabel(headerText);
-	                    Font font = new Font("Tahoma", Font.PLAIN, 16);
-	                    FontMetrics fontMetrics = defaultLabel.getFontMetrics(font);
-	                    maxWidth = SwingUtilities.computeStringWidth(fontMetrics, headerText);
+                    	Font font = new Font("Tahoma", Font.PLAIN, 16);	                    
+ 	                    FontMetrics fontMetrics = defaultLabel.getFontMetrics(font);
+ 	                    maxWidth = SwingUtilities.computeStringWidth(fontMetrics, headerText);	                    
+	                    	
 	                } catch (final ClassCastException ce) {
 	                    // Can’t work out the header column width..
 	                    maxWidth = 0;
@@ -134,6 +141,7 @@ public class CS_SpaltenBreite {
 	        int cellWidth = 0;
 	        for (int i = 0; i < aTable.getRowCount(); i++) {
 	            tableCellRenderer = aTable.getCellRenderer(i, columnNo);
+	            
 	            comp = tableCellRenderer.getTableCellRendererComponent(aTable, aTable.getValueAt(i, columnNo), false, false, i, columnNo);
 	            if (comp instanceof JTextComponent) {
 	                JTextComponent jtextComp = (JTextComponent) comp;

@@ -5,26 +5,44 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import net.miginfocom.swing.MigLayout;
-
+/*
+ * Das Panel Einsatz liefert die relevanten Informationen eines Einsatzes (Projektname, Aufgabenname, Träger, Einsatz Beginn, Einsatz Ende, Uhrzeit, Helfer und Notiz)
+ * Es können Einsätze erstellt werden und 
+ */
 
 public class P_Einsatz extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel Einsatz;
 	private JTable table;
 	private JTextField textField;
+	private JFrame parentFrame;
+	private JScrollPane scrollPane;
+	private DefaultTableModel model;
 
 	/**
 	 * Create the panel.
@@ -75,34 +93,14 @@ public class P_Einsatz extends JPanel {
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_3.add(textField);
 		textField.setColumns(10);
-			
-		JButton btnStart = CS_ButtonDesign.buttonMedium();
-		btnStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnStart.setText("Start");
-		panel_3.add(btnStart);
-		
+				
 		Component verticalStrut = Box.createVerticalStrut(50);
 		panel_3.add(verticalStrut);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.getViewport().setBackground(new Color(245, 245, 245));
 		panel_2.add(scrollPane, BorderLayout.CENTER);
-		
-		table = new JTable();
-		table.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		
-		table.setBorder(new LineBorder(new Color(169, 169, 169)));
-		CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.traegersql());
-		DefaultTableModel model = CS_DataBaseConnect.getModel();
-		table.setModel(model);
-		scrollPane.setViewportView(table);
-		table.getTableHeader().setBackground(new Color(192, 192, 192));
-		table.setAutoResizeMode(table.AUTO_RESIZE_OFF);
-		//Spaltenbreite an Spalteninhalt anpassen
-		CS_SpaltenBreite.autoResizeTable(table, true,10);
+		tableBuild();
 		
 		JPanel panel_7 = new JPanel();
 		panel_7.setBackground(new Color(255, 255, 224));
@@ -113,12 +111,49 @@ public class P_Einsatz extends JPanel {
 		panel.setBackground(new Color(255, 255, 224));
 		panel_7.add(panel, "cell 0 7,grow");
 		
-		JButton btnTraegerAnl = CS_ButtonDesign.buttonAnlegen();
-		panel_7.add(btnTraegerAnl, "cell 0 8");
-		
-		btnTraegerAnl.addActionListener(new ActionListener() {
+		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model){
+			  @Override
+			  public void toggleSortOrder(int column) {}};
+        table.setRowSorter(sorter);
+        
+    	JButton btnStart = CS_ButtonDesign.buttonMedium();
+		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+			    String text = textField.getText();
+                if (text.length() == 0) {
+                  sorter.setRowFilter(null);
+                } else {
+                  sorter.setRowFilter(RowFilter.regexFilter("(?i)"+text));
+                }				
+			}
+		});
+		
+	  	textField.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					int key = e.getKeyCode();
+			        
+			        if (key == KeyEvent.VK_ENTER)
+			        {
+		        	 String text = textField.getText();
+		        	 if (text.length() == 0) 
+		        		 sorter.setRowFilter(null);
+		        	  else 
+		        		 sorter.setRowFilter(RowFilter.regexFilter("(?i)"+text));               
+			        }
+				}
+			});
+	  	
+		btnStart.setText("Start");
+		panel_3.add(btnStart);
+				
+		JButton btnEinsatzAnl = CS_ButtonDesign.buttonAnlegen();
+		panel_7.add(btnEinsatzAnl, "cell 0 8");
+		
+		btnEinsatzAnl.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Dialog_EinsatzAnlegen einsatzanlegen = new Dialog_EinsatzAnlegen(parentFrame);
+				einsatzanlegen.setVisible(true);
 			}
 		});
 				
@@ -144,9 +179,52 @@ public class P_Einsatz extends JPanel {
 
 	}
 	
+	public String getErstEinsatzRow()
+	{
+		return model.getValueAt(table.getSelectedRow(), 8).toString();
+	}
+	
+	private void tableBuild()
+	{
+		table = new JTable();
+		if(CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.einsatzsql(),true))
+		{
+			model = new DefaultTableModel();
+			model = CS_DataBaseConnect.getModel();
+			table.setModel(model);
+			scrollPane.setViewportView(table);
+			table.setBorder(new LineBorder(new Color(169, 169, 169)));
+			table.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			table.getTableHeader().setBackground(new Color(192, 192, 192));
+			table.getColumnModel().getColumn(0).setHeaderValue("Projekt");
+			table.getColumnModel().getColumn(1).setHeaderValue("Aufgabe");
+			table.getColumnModel().getColumn(2).setHeaderValue("Träger");
+			table.getColumnModel().getColumn(3).setHeaderValue("EinsatzBeginn");
+			table.getColumnModel().getColumn(4).setHeaderValue("EinsatzEnde");	
+			table.getColumnModel().getColumn(5).setHeaderValue("Uhrzeit");
+			table.getColumnModel().getColumn(5).setCellRenderer(new CS_JTableUhrzeitButtonRenderer());
+			CS_JTableUhrzeitButtonEditor editor = new CS_JTableUhrzeitButtonEditor(new JCheckBox(),P_Einsatz.this);
+			table.getColumnModel().getColumn(5).setCellEditor(editor);
+			table.getColumnModel().getColumn(6).setHeaderValue("Helfer");
+			table.getColumnModel().getColumn(7).setHeaderValue("Notiz");
+			table.removeColumn(table.getColumnModel().getColumn(8));
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			//Spaltenbreite an Spalteninhalt anpassen
+			CS_SpaltenBreite.autoResizeTable(table, true,10, false);
+		}
+		else
+			JOptionPane.showMessageDialog(null,"Datenbankverbindung konnte nicht hergestellt werden!","Titel", JOptionPane.ERROR_MESSAGE);
+	}
+	
 	public JPanel EinsatzPanel()
 	{
 		return Einsatz;
+	}
+	
+	
+	public void setFrame(JFrame Mainframe)
+	{
+		parentFrame = Mainframe;
 	}
 	
 }

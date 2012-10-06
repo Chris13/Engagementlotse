@@ -1,14 +1,5 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextPane;
-import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -28,6 +19,10 @@ import java.awt.event.WindowEvent;
 
 
 public class Dialog_Login extends JDialog{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField loginField;
 	private JPasswordField passwordField;
 	
@@ -97,7 +92,7 @@ public class Dialog_Login extends JDialog{
 				{
 				String[]splitName = name.split(" ");
 			
-				if(!CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.passwortermittelnsql("'"+splitName[0]+"'","'"+splitName[1]+"'")))			
+				if(!CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.passwortermittelnsql("'"+splitName[0]+"'","'"+splitName[1]+"'"),false))			
 					JOptionPane.showMessageDialog(null,"Falsches Passwort oder Benutzername!","Titel", JOptionPane.ERROR_MESSAGE);
 		
 				DefaultTableModel model = CS_DataBaseConnect.getModel();
@@ -106,7 +101,7 @@ public class Dialog_Login extends JDialog{
 					pw = md5(String.valueOf(passwordField.getPassword()));
 					if(pw.equals(model.getValueAt(0, 0).toString()))
 					{
-						new Frame_Vorlage();
+						new MainFrame_Vorlage();
 						dispose();
 						return;
 					}	

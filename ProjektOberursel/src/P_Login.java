@@ -9,11 +9,9 @@ import java.awt.Component;
 import javax.swing.Box;
 import java.awt.Color;
 import javax.swing.BoxLayout;
-import java.awt.Container;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
-import java.awt.FlowLayout;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -23,8 +21,11 @@ import java.awt.event.ActionEvent;
 
 
 public class P_Login extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel login;
-	private JTextField textField;
 	private JTextField textField_1;
 
 	/**
@@ -150,6 +151,7 @@ public class P_Login extends JPanel {
 		btnPasswort.setText("     Account anlegen   ");
 		btnPasswort.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 			}
 		});
 		

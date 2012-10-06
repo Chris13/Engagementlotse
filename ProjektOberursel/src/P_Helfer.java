@@ -2,46 +2,49 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
-
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
+import javax.swing.plaf.TableHeaderUI;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.border.CompoundBorder;
 import javax.swing.JButton;
-import javax.swing.border.MatteBorder;
 import java.awt.Color;
-import java.awt.SystemColor;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.ResultSet;
-
-import javax.swing.JToggleButton;
 import javax.swing.border.LineBorder;
-import javax.swing.SwingConstants;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import javax.swing.Box;
 
+/*	Das Panel Helfer gibt dem Anwender die relevanten Helferdaten aus, lässt ihn einen neuen Helfer anlegen, bearbeiten und löschen
+ *  und gibt ihm die Möglichkeit Helferdetails in einem separatem Dialogfenster einzusehen und Notizen hinzuzufügen. Desweiteren
+ *  steht die Funktion "Mögliche Projekte für einen bestimmten Helfer suchen" zur Verfügung, die alle Projekte, die der Helfer auf Basis seiner 
+ *  Fähigkeiten machen kann, herausfiltert und ihn einen Einsatz für den Helfer erzeugen lässt und die erstellten Einsätze anzeigt
+ */
 
 public class P_Helfer extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel Helfer;
 	protected JTable table;
 	private JTextField textField;
@@ -97,7 +100,6 @@ public class P_Helfer extends JPanel {
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_3.add(textField);
 		textField.setColumns(10);
-		Dimension groesse = new Dimension(150, 23);
 
 		Component verticalStrut = Box.createVerticalStrut(50);
 		panel_3.add(verticalStrut);
@@ -112,8 +114,21 @@ public class P_Helfer extends JPanel {
 		panel_2.add(panel_7, BorderLayout.EAST);
 		panel_7.setLayout(new MigLayout("", "[grow]", "[][][][][][][][grow][][][]"));
 		
-		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+		//Suche der Tabelle
+		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model) {
+			//Überschreibt die Methode zur Sortierung der Spalten, da die Zeilen in der Table dann nicht mehr mit den Zeilen des Tablemodel übereinstimmen
+			//Das Model enthält Zusatzinformationen zu Ids etc, die dann nicht mehr zur Zeile des Tables passen
+			  @Override
+			  public void toggleSortOrder(int column) {}};
+	
         table.setRowSorter(sorter);
+        
+        JTableHeader hdr = (JTableHeader)table.getTableHeader();
+        hdr.addMouseListener(new MouseAdapter() {
+        public void mouseClicked (MouseEvent event) {
+
+        }        
+        });
         
         JButton btnStart = CS_ButtonDesign.buttonMedium();
         btnStart.addActionListener(new ActionListener() {
@@ -122,7 +137,7 @@ public class P_Helfer extends JPanel {
                 if (text.length() == 0) {
                   sorter.setRowFilter(null);
                 } else {
-                  sorter.setRowFilter(RowFilter.regexFilter(text));
+                  sorter.setRowFilter(RowFilter.regexFilter("(?i)"+text));
                 }
             }
         });
@@ -138,13 +153,14 @@ public class P_Helfer extends JPanel {
 	        	 if (text.length() == 0) 
 	        		 sorter.setRowFilter(null);
 	        	  else 
-	        		 sorter.setRowFilter(RowFilter.regexFilter(text));               
+	        		 sorter.setRowFilter(RowFilter.regexFilter("(?i)"+text));               
 		        }
 			}
 		});
 		btnStart.setText("Start");
 		panel_3.add(btnStart);
 		
+		//Button zur Anzeige der Helferdetails im separatem Dialogfenster
 		JButton btnHelferAnz = CS_ButtonDesign.buttonHelferAnz();
 		panel_7.add(btnHelferAnz, "cell 0 0,growx");
 		
@@ -154,6 +170,7 @@ public class P_Helfer extends JPanel {
 			}
 		});
 		
+		//Button zur Anzeige der möglichen Aufgaben für einen ausgewählten Helfer und zur direkten Erstellung eines Einsatzes
 		JButton btnAufgabeAnz = CS_ButtonDesign.buttonAufgabenAnz();
 		panel_7.add(btnAufgabeAnz, "cell 0 1");
 		
@@ -167,6 +184,7 @@ public class P_Helfer extends JPanel {
 		panel.setBackground(new Color(255, 255, 224));
 		panel_7.add(panel, "cell 0 7,grow");
 		
+		//Button um einen neuen Helfer anzulegen
 		JButton btnHelferAnl = CS_ButtonDesign.buttonAnlegen();
 		panel_7.add(btnHelferAnl, "cell 0 8");
 		
@@ -183,6 +201,7 @@ public class P_Helfer extends JPanel {
 			}
 		});
 		
+		//Button um einen Helfer zu bearbeiten
 		JButton btnBearbeiten = CS_ButtonDesign.buttonBearbeiten();
 		panel_7.add(btnBearbeiten, "cell 0 9");
 		
@@ -193,6 +212,7 @@ public class P_Helfer extends JPanel {
 			}
 		});
 		
+		//Button um einen Helfer zu löschen
 		JButton btnNewButton = CS_ButtonDesign.buttonLoeschen();
 		panel_7.add(btnNewButton, "cell 0 10");
 		
@@ -208,13 +228,12 @@ public class P_Helfer extends JPanel {
 
 	}
 	
+	//Erstellt die Tabelle mit den relevanten Helferdaten
 	public void tableBuild()
-	{
-		
-		
-		table = new JTable();
-		
-		if(CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.helfersql()))
+	{				
+		table = new JTable();	
+		//Erstellung des SQL und Durchführung der Datenbankanweisungen
+		if(CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.helfersql(),false))
 		{
 			model = new DefaultTableModel();
 			model = CS_DataBaseConnect.getModel();
@@ -223,8 +242,8 @@ public class P_Helfer extends JPanel {
 			table.setBorder(new LineBorder(new Color(169, 169, 169)));
 			table.setFont(new Font("Tahoma", Font.PLAIN, 16));
 			table.getTableHeader().setBackground(new Color(192, 192, 192));
-			table.getColumnModel().getColumn(0).setHeaderValue("Helfer ID");
-			table.getColumnModel().getColumn(1).setHeaderValue("Eintrittsdatum");
+			table.getColumnModel().getColumn(0).setHeaderValue("Eintrittsdatum");
+			table.getColumnModel().getColumn(1).setHeaderValue("Anrede/Titel");
 			table.getColumnModel().getColumn(2).setHeaderValue("Vorname");
 			table.getColumnModel().getColumn(3).setHeaderValue("Nachname");
 			table.getColumnModel().getColumn(4).setHeaderValue("Geschlecht");
@@ -235,20 +254,25 @@ public class P_Helfer extends JPanel {
 			table.getColumnModel().getColumn(9).setHeaderValue("Telefonnummer");
 			table.getColumnModel().getColumn(10).setHeaderValue("Handynummer");
 			table.getColumnModel().getColumn(11).setHeaderValue("EMail");
-			table.setAutoResizeMode(table.AUTO_RESIZE_OFF);
+			//Macht die Spalte ID in der Table unsichtbar, im Model ist sie noch verfügbar!
+			table.removeColumn(table.getColumnModel().getColumn(12));
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			//Spaltenbreite an Spalteninhalt anpassen
-			CS_SpaltenBreite.autoResizeTable(table, true,10);
+			CS_SpaltenBreite.autoResizeTable(table, true,10, false);
 		}
 		else
 			JOptionPane.showMessageDialog(null,"Datenbankverbindung konnte nicht hergestellt werden!","Titel", JOptionPane.ERROR_MESSAGE);
 
 	}
+	
+	//Übergibt die HelferID und das Parentframe an den aufzurufenden Dialog, der die Helferdetails anzeigt und die Angabe von Notizen ermöglicht 
 	private void helferDetailsAnzeigen()
 	{
 		try
 		{
-			String id = "";
-			id = table.getValueAt(table.getSelectedRow(),0).toString();
+			String id = "";	
+			id = model.getValueAt(table.getSelectedRow(), 12).toString();
+			//ParentFrame wird übergeben um Dialog modal zu setzen
 			Dialog_HelferAnzeigen helferanzeigen = new Dialog_HelferAnzeigen(parentFrame,id);
 			helferanzeigen.setVisible(true);
 		}
@@ -256,10 +280,10 @@ public class P_Helfer extends JPanel {
 		{
 			JOptionPane.showMessageDialog(null,"Bitte einen Helfer aus der Tabelle auswählen!","Titel", JOptionPane.INFORMATION_MESSAGE);
 		}
-		
-	
+
 	}
 	
+	//Übergibt die HelferID und den Namen an das Dialogfenster zur Filterung der möglichen Aufgaben und zur Erstellung neuer Einsätze für den Helfer
 	private void aufgabenAnzeigen()
 	{
 		try
@@ -267,8 +291,8 @@ public class P_Helfer extends JPanel {
 			String name = "";
 			name = (String)table.getValueAt(table.getSelectedRow(),2);
 			name += " "+(String)table.getValueAt(table.getSelectedRow(),3);
-			String id = table.getValueAt(table.getSelectedRow(),0).toString();
-			Dialog_AufgabeHelfer aufgabenAnzeigen = new Dialog_AufgabeHelfer(parentFrame,id, name);
+			String id = model.getValueAt(table.getSelectedRow(), 12).toString();
+			Dialog_AufgabefuerHelfer aufgabenAnzeigen = new Dialog_AufgabefuerHelfer(parentFrame,id, name);
 			aufgabenAnzeigen.setVisible(true);
 		}
 		catch(Exception ex)
@@ -277,11 +301,13 @@ public class P_Helfer extends JPanel {
 		}
 	}
 	
+	//liefert das erstelle Panel an das Mainframe, geht vermutlich schöner
 	public JPanel HelferPanel()
 	{
 		return Helfer;
 	}
 	
+	//liefert das ParentFrame zur Übergabe des Mainframe an ein Dialogfenster (wegen modal setzen)
 	public void setFrame(JFrame Mainframe)
 	{
 		parentFrame = Mainframe;

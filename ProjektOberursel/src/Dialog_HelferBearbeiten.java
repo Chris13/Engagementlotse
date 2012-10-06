@@ -1,7 +1,5 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.List;
-
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -9,39 +7,33 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JList;
 import java.awt.Component;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-
 import javax.swing.Box;
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.toedter.components.JLocaleChooser;
-import com.toedter.components.JSpinField;
-import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
 import javax.swing.JCheckBox;
 
 
 public class Dialog_HelferBearbeiten extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtVName;
 	private JTextField txtNName;
@@ -410,7 +402,7 @@ public class Dialog_HelferBearbeiten extends JDialog {
 	
 	private void faehigkeitenLaden()
 	{
-		CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.faehigkeitensql());
+		CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.faehigkeitensql(),true);
 		model = CS_DataBaseConnect.getModel();
 		dictionary = new HashMap<String, Integer>();
 

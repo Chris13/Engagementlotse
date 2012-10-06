@@ -25,7 +25,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +38,10 @@ import javax.swing.JScrollPane;
 
 public class Dialog_HelferAnzeigen extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtVName;
 	private JTextField txtNName;
@@ -60,26 +63,7 @@ public class Dialog_HelferAnzeigen extends JDialog {
 	private DefaultListModel saveModel;
 	private JTextArea compareTextArea;
 
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			Dialog_HelferAnzeigen dialog = new Dialog_HelferAnzeigen(new JFrame(), "id");
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	  public void actionPerformed(ActionEvent e) {
-		    setVisible(false); 
-		    dispose(); 
-		  }
-
-	/**
+     /*
 	 * Create the dialog.
 	 */
 	public Dialog_HelferAnzeigen(JFrame parent, String hId)
@@ -222,7 +206,7 @@ public class Dialog_HelferAnzeigen extends JDialog {
 						panel_1.add(txtEMail, "flowx,cell 2 8,growx");
 						txtEMail.setColumns(10);
 					}
-					helferLaden();
+						helferLaden();
 					{
 						Component verticalStrut = Box.createVerticalStrut(20);
 						panel_1.add(verticalStrut, "cell 0 9");
@@ -416,7 +400,7 @@ public class Dialog_HelferAnzeigen extends JDialog {
 	
 	private void helferLaden()
 	{
-		CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.helferdetailssql(id));
+		CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.helferdetailssql(id),true);
 		DefaultTableModel helfermodel = CS_DataBaseConnect.getModel();
 		compareTextArea = new JTextArea();
 
@@ -452,7 +436,7 @@ public class Dialog_HelferAnzeigen extends JDialog {
 	
 	private void faehigkeitenLaden()
 	{
-		CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.faehigkeitensql());
+		CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.faehigkeitenfuercomboboxsql(),true);
 		DefaultTableModel model = CS_DataBaseConnect.getModel();
 		dictionary = new HashMap<String, Integer>();
 
@@ -465,7 +449,7 @@ public class Dialog_HelferAnzeigen extends JDialog {
 		}
 		try
 		{
-			CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.faehigkeitenhelfersql(id));
+			CS_DataBaseConnect.dbQuery(CS_SqlAbfragen.faehigkeitenhelfersql(id),true);
 			model = new DefaultTableModel();
 			model = CS_DataBaseConnect.getModel();
 			
